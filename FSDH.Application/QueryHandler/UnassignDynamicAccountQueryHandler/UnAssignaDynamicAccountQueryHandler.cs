@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FSDH.Application.QueryHandler
+namespace FSDH.Application.QueryHandler.UnassignDynamicAccountQueryHandler
 {
     public class UnAssignaDynamicAccountQueryHandler : IRequestHandler<UnassignADynamicAccountQuery, UnassignDynamicAccount>
     {

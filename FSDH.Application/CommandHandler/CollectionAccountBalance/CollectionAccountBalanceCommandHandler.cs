@@ -1,4 +1,4 @@
-﻿using FSDH.Application.Command;
+﻿using FSDH.Application.Command.CollectionAccountBalance;
 using FSDH.Application.Common.Interfaces;
 using FSDH.Application.Common.Models.FSDH360;
 using MediatR;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FSDH.Application.CommandHandler.CollectionAccountBalance
 {
-    public class CollectionAccountBalanceCommandHandler : IRequestHandler<CollectionAccountNumberCommand, CollectionAccountBalanceDetails>
+    public class CollectionAccountBalanceCommandHandler : IRequestHandler<CollectionAccountBalanceCommand, CollectionAccountBalanceDetails>
     {
         private readonly IFSDH360 _fsdh360;
         public CollectionAccountBalanceCommandHandler(IFSDH360 fsdh360)
@@ -18,14 +18,14 @@ namespace FSDH.Application.CommandHandler.CollectionAccountBalance
             _fsdh360 = fsdh360;
         }
 
-        public async Task<CollectionAccountBalanceDetails> Handle(CollectionAccountNumberCommand request, CancellationToken cancellationToken)
+        public async Task<CollectionAccountBalanceDetails> Handle(CollectionAccountBalanceCommand request, CancellationToken cancellationToken)
         {
             var data = new CollectionAccountBalanceResources
             {
                 accountNumber = request.accountNumber
                 
             };
-            return await _fsdh360.CollectionAccountbalanceDetails(data, request.apiversion);
+            return await _fsdh360.CollectionAccountbalanceDetails(data);
         } 
     }
 }

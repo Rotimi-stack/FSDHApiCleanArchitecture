@@ -1,4 +1,11 @@
-﻿using FSDH.Application.Command;
+﻿using FSDH.Application.Command.CollectionAccountBalance;
+using FSDH.Application.Command.CreateVirtualAccount;
+using FSDH.Application.Command.DynamicAccountTransactionHistory;
+using FSDH.Application.Command.GetVirtualaccountTransactionHistory;
+using FSDH.Application.Command.QueryBalanceforCollectionAccount;
+using FSDH.Application.Command.StaticVirtualAccount;
+using FSDH.Application.Command.UpdateDynamicAccount;
+using FSDH.Application.Command.UpdateStaticVirtualAccount;
 using FSDH.Application.Common.Models.FSDH360;
 using FSDH.Application.Query.ADynamicAccountQuery;
 using FSDH.Application.Query.AllCollectionLinkedAccountQuery;
@@ -42,10 +49,29 @@ namespace FSDH.API.Controllers
         }
 
         [HttpPost("collection-account-balance-query")]
-        public async Task<ActionResult<CollectionAccountBalanceDetails>> CollectionAccountbalanceDetails([FromQuery(Name = "api-version")] string apiversion, CollectionAccountNumberCommand actCom)
+        public async Task<ActionResult<CollectionAccountBalanceDetails>> CollectionAccountbalanceDetails([FromQuery(Name = "api-version")] string apiversion, CollectionAccountBalanceCommand actCom)
         {
             return await Mediator.Send(actCom);
         }
+
+        [HttpPost("create-dynamic-virtual-account")]
+        public async Task<ActionResult<CreateDynamicVirtualAccountResponses>> CreateDynamicVirtualAccount([FromQuery(Name = "api-version")] string apiversion, CreateVirtualAccountCommand actCom)
+        {
+            return await Mediator.Send(actCom);
+        }
+
+        [HttpPost("dynamic-account-transaction-history")]
+        public async Task<ActionResult<GetDynamicAccountTransactionHistory>> GetDynamicAccountTransactionHistory([FromQuery(Name = "api-version")] string apiversion, DynamicAccountTransactionHistoryCommand actCom)
+        {
+            return await Mediator.Send(actCom);
+        }
+
+        [HttpPut("dynamic-account-transaction-history")]
+        public async Task<ActionResult<UpdateDynamicAccountResponse>> UpdateDynamicAccount([FromQuery(Name = "api-version")] string apiversion, UpdateDynamicAccountCommand actCom)
+        {
+            return await Mediator.Send(actCom);
+        }
+
 
         [HttpGet("assigned-account-by-bvn")]
         public async Task<ActionResult<GetAllAsignedDynamicAccountBVN>> GetAllDynamicAssignedAccountByBVN([FromQuery] int skip, [FromQuery] int take, [FromQuery(Name = "api-version")] string apiversion, [FromQuery][Required] string BVN)
@@ -96,6 +122,31 @@ namespace FSDH.API.Controllers
         {
             return await Mediator.Send(new GetAllStaticAccountLinkedtoBVNQuery{ apiversion = apiversion, BVN = BVN });
                 
+        }
+
+        [HttpPost("create-static-virtualaccount")]
+        public async Task<ActionResult<CreateStaticVirtualAccountResponses>> CreateStaticVirtualAccount([FromQuery(Name = "api-version")] string apiversion, CreateStaticVirtualAccountCommand var)
+        {
+            return await Mediator.Send(var);
+           
+        }
+
+        [HttpPut("update-static-virtualaccount")]
+        public async Task<ActionResult<UpdateStaticVirtualAccountResponse>> UpdateStaticVirtualAccount([FromQuery(Name = "api-version")] string apiversion, UpdateStaticVirtualAccountCommand var)
+        {
+            return await Mediator.Send(var);
+
+        }
+        [HttpPost("query-balance-collectionaccount")]
+        public async Task<QueryBalanceforCollectionAccountResponse> QueryBalanceforCollectionAccount([FromQuery(Name = "api-version")] string apiversion, QueryBalanceforCollectionAccountCommand car)
+        {
+            return await Mediator.Send(car);
+        }
+
+        [HttpPost("query-balance-collection-account")]
+        public async Task<GetVirtualaccountTransactionHistoryResponse> GetVirtualaccountTransactionHistory([FromQuery(Name = "api-version")] string apiversion, GetVirtualaccountTransactionHistoryCommand thr)
+        {
+            return await Mediator.Send(thr);
         }
         #endregion
     }

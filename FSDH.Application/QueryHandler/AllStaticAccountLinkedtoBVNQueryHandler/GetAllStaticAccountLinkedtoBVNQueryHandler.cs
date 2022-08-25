@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FSDH.Application.QueryHandler
+namespace FSDH.Application.QueryHandler.AllStaticAccountLinkedtoBVNQueryHandler
 {
     public class GetAllStaticAccountLinkedtoBVNQueryHandler : IRequestHandler<GetAllStaticAccountLinkedtoBVNQuery, GetAllStaticAccountLinkedtoBVN>
     {

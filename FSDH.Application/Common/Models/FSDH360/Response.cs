@@ -9,6 +9,63 @@ namespace FSDH.Application.Common.Models.FSDH360
        
     }
 
+    public class GetVirtualaccountTransactionHistoryResponse
+    {
+
+        public string virtualAccountNumber { get; set; }
+        public DateTime transactionDate { get; set; }
+        public DateTime endDate { get; set; }
+        public string collectionAccountNumber { get; set; }
+        public string transactionType { get; set; }
+        public string transactionCurrencyCode { get; set; }
+        public string amount { get; set; }
+        public string narration { get; set; }
+        public string counterPartyAccountNumber { get; set; }
+        public string counterPartyAccountName { get; set; }
+
+    }
+
+    public class QueryBalanceforCollectionAccountResponse
+    {
+        public string accountNumber { get; set; }
+    }
+    public class UpdateDynamicAccountResponse
+    {
+        public bool hasExpired { get; set; }
+        public DateTime expires { get; set; }
+        public string uniqueReference { get; set; }
+        public bool isOneTimePaymentAccount { get; set; }
+        public string expectedAmount { get; set; }
+        public string accountNumber { get; set; }
+        public string accountName { get; set; }
+        public string collectionAccountNumber { get; set; }
+        public string bvn { get; set; }
+        public int accountType { get; set; }
+        public string accountCurrency { get; set; }
+    }
+
+    public class GetDynamicAccountTransactionHistory
+    {
+        public string virtualAccountNumber { get; set; }
+        public string collectionAccountNumber { get; set; }
+        public string transactionType { get; set; }
+        public string transactionCurrencyCode { get; set; }
+        public int amount { get; set; }
+        public string narration { get; set; }
+        public string transactionDate { get; set; }
+        public string counterPartyAccountNumber { get; set; }
+        public string counterPartyAccountName { get; set; }
+    }
+
+    public class CreateStaticVirtualAccountResponses
+    {
+        public string accountNumber { get; set; }
+        public string accountName { get; set; }
+        public string collectionAccountNumber { get; set; }
+        public string bvn { get; set; }
+        public string accountType { get; set; }
+        public string accountCurrency { get; set; }
+    }
 
     public class GetAllAsignedDynamicAccount
     {
@@ -55,7 +112,15 @@ namespace FSDH.Application.Common.Models.FSDH360
         public string accountCurrency { get; set; }
     }
 
-
+    public class UpdateStaticVirtualAccountResponse
+    {
+        public string accountNumber { get; set; }
+        public string accountName { get; set; }
+        public string collectionAccountNumber { get; set; }
+        public string bvn { get; set; }
+        public string accountType { get; set; }
+        public string accountCurrency { get; set; }
+    }
 
     public class GetUnAssignedDynamicAccount
     {
@@ -87,6 +152,21 @@ namespace FSDH.Application.Common.Models.FSDH360
     public class UnassignDynamicAccount
     {
 
+    }
+
+    public class CreateDynamicVirtualAccountResponses
+    {
+        public bool hasExpired { get; set; }
+        public DateTime expires { get; set; }
+        public string uniqueReference { get; set; }
+        public bool isOneTimePaymentAccount { get; set; }
+        public string expectedAmount { get; set; }
+        public string accountNumber { get; set; }
+        public string accountName { get; set; }
+        public string collectionAccountNumber { get; set; }
+        public string bvn { get; set; }
+        public int accountType { get; set; }
+        public string accountCurrency { get; set; }
     }
 
     public class GetAllstaticAccount

@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Command\CollectionAccountBalance\" />
     <Folder Include="Common\Mapper\" />
     <Folder Include="Common\Models\FSDHIDENTITY\" />
     <Folder Include="Services\" />

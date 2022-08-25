@@ -63,7 +63,7 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
 
         }
 
-        public async Task<CollectionAccountBalanceDetails> CollectionAccountbalanceDetails(CollectionAccountBalanceResources res, string apiversion)
+        public async Task<CollectionAccountBalanceDetails> CollectionAccountbalanceDetails(CollectionAccountBalanceResources res)
         {
             var data = new CollectionAccountBalanceRequest
             {
@@ -71,17 +71,15 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
 
             };
             return await SendAsync<CollectionAccountBalanceRequest, CollectionAccountBalanceDetails>(
-                data, $"v1/virtualaccounts/dynamic/collectionaccount/balance?api-version={apiversion}", FSDH360HttpMethodType.Get);
+                data, $"/v1/virtualaccounts/dynamic/collectionaccount/balance?api-version=1", FSDH360HttpMethodType.Post);
 
         }
-
 
         public async Task<GetAllAsignedDynamicAccountBVN> GetAllDynamicAssignedAccountByBVN(int take, int skip, string apiversion, string BVN)
         {
             return await SendAsync<GetAllDynamicAssignedAccountByBVNQuery, GetAllAsignedDynamicAccountBVN>(
                 new GetAllDynamicAssignedAccountByBVNQuery(), $"/v1/virtualaccounts/dynamic/assigned/bvn?BVN={BVN}&skip={skip}&take={take}&api-version{apiversion}", FSDH360HttpMethodType.Get);
         }
-
 
         public async Task<GetADynamicAccount> GetADynamicAccount(string apiversion, string AccountNumber)
         {
@@ -95,6 +93,60 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                 new UnassignADynamicAccountQuery(), $"v1/virtualaccounts/dynamic?{AccountNumber}&{apiversion}", FSDH360HttpMethodType.Delete
                 );
         }
+
+        public async Task<CreateDynamicVirtualAccountResponses> CreateDynamicVirtualAccount(CreateVirtualAccountResources var)
+        {
+            var data = new CreateVirtualAccountRequest
+            {
+                validTill = var.validTill,
+                accountName = var.accountName,
+                bvn = var.bvn,
+                collectionAccountNumber = var.collectionAccountNumber,
+                currencyCode = var.currencyCode,
+                expectedAmount = var.expectedAmount,
+                isOneTimePaymentAccount = var.isOneTimePaymentAccount,
+                uniqueReference = var.uniqueReference,
+                validFor = var.validFor
+            };
+            return await SendAsync<CreateVirtualAccountRequest, CreateDynamicVirtualAccountResponses>(
+                data, $"/v1/virtualaccounts/dynamic?api-version=1", FSDH360HttpMethodType.Post);
+        }
+
+        public async Task<GetDynamicAccountTransactionHistory> GetDynamicAccountTransactionHistory(GetDynamicAccountTransactionHistoryResources atr)
+        {
+            var data = new GetDynamicAccountTransactionHistoryRequest
+            {
+                take = atr.take,
+                accountNumber = atr.accountNumber,
+                endDate = atr.endDate,
+                skip = atr.skip,
+                startDate = atr.startDate
+            };
+            return await SendAsync<GetDynamicAccountTransactionHistoryRequest, GetDynamicAccountTransactionHistory>(
+                data, $"v1/virtualaccounts/dynamic/history?api-version=1", FSDH360HttpMethodType.Post
+                );
+        }
+        public async Task<UpdateDynamicAccountResponse> UpdateDynamicAccount(UpdateDynamicAccountResources adr)
+        {
+            var data = new UpdateDynamicAccountRequest
+            {
+                accountName = adr.accountName,
+                accountNumber = adr.accountNumber,
+                bvn = adr.bvn,
+                collectionAccountNumber = adr.collectionAccountNumber,
+                expectedAmount = adr.expectedAmount,
+                uniqueReference = adr.uniqueReference,
+                validFor = adr.validFor,
+                validTill = adr.validTill
+
+            };
+            return await SendAsync<UpdateDynamicAccountRequest, UpdateDynamicAccountResponse>(
+                data, $"/v1/virtualaccounts/dynamic?api-version=1", FSDH360HttpMethodType.Put
+                );
+
+        }
+
+
 
         #endregion
 
@@ -126,6 +178,59 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                 new GetAllStaticAccountLinkedtoBVNQuery(), $"v1/virtualaccounts/static/bvn?{BVN}&{apiversion}", FSDH360HttpMethodType.Get);
         }
 
+        public async Task<CreateStaticVirtualAccountResponses> CreateStaticVirtualAccount(CreateStaticVirtualAccountResource var)
+        {
+            var data = new CreateStaticVirtualAccountRequest
+            {
+                currencyCode = var.currencyCode,
+                collectionAccountNumber = var.collectionAccountNumber,
+                bvn = var.bvn,
+                accountName = var.accountName
+            };
+            return await SendAsync<CreateStaticVirtualAccountRequest, CreateStaticVirtualAccountResponses>(
+                data, $"/v1/virtualaccounts/static?api-version=1", FSDH360HttpMethodType.Post
+                );
+        }
+
+        public async Task<UpdateStaticVirtualAccountResponse> UpdateStaticVirtualAccount(UpdateStaticVirtualAccountResources var)
+        {
+            var data = new UpdateStaticVirtualAccountRequest
+            {
+                virtualAccountNumber = var.virtualAccountNumber,
+                collectionAccountNumber = var.collectionAccountNumber,
+                bvn = var.bvn,
+                accountName = var.accountName
+            };
+            return await SendAsync<UpdateStaticVirtualAccountRequest, UpdateStaticVirtualAccountResponse>(
+                data, $"/v1/virtualaccounts/static?api-version=1", FSDH360HttpMethodType.Put
+                );
+        }
+
+        public async Task<QueryBalanceforCollectionAccountResponse> QueryBalanceforCollectionAccount(QueryBalanceforCollectionAccountResource car)
+        {
+            var data = new QueryBalanceforCollectionAccountRequest
+            {
+                accountNumber = car.accountNumber
+            };
+            return await SendAsync<QueryBalanceforCollectionAccountRequest, QueryBalanceforCollectionAccountResponse>(
+                data, $"/v1/virtualaccounts/static/collectionaccount/balance?api-version=1", FSDH360HttpMethodType.Post);
+        }
+
+
+        public async Task<GetVirtualaccountTransactionHistoryResponse> GetVirtualaccountTransactionHistory(GetVirtualaccountTransactionHistoryResource thr)
+        {
+            var data = new GetVirtualaccountTransactionHistoryRequest
+            {
+                take = thr.take,
+                accountNumber = thr.accountNumber,
+                endDate = thr.endDate,
+                skip = thr.skip,
+                startDate = thr.startDate
+            };
+            return await SendAsync<GetVirtualaccountTransactionHistoryRequest, GetVirtualaccountTransactionHistoryResponse>(
+                data, $"/v1/virtualaccounts/static/history?api-version=1", FSDH360HttpMethodType.Post
+                );
+        }
         #endregion
 
 
@@ -175,7 +280,7 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
 
         }
 
-        
+       
     }
 }
 

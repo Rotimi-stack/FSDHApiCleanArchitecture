@@ -4,11 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FSDH.Application.Command
+namespace FSDH.Application.Command.QueryBalanceforCollectionAccount
 {
-   public class CollectionAccountNumberCommand : IRequest<CollectionAccountBalanceDetails>
+   public class QueryBalanceforCollectionAccountCommand : IRequest<QueryBalanceforCollectionAccountResponse>
     {
         public string accountNumber { get; set; }
-        public string apiversion { get; set; }
     }
 }
