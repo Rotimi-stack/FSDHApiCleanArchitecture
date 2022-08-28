@@ -17,45 +17,45 @@ namespace FSDH.API.Controllers
 {
     public class FSDHPayController : BaseController
     {
-        [HttpGet("balanceenquiry-fsdhpay")]
+        [HttpGet("api/balance/enquiry")]
         public async Task<ActionResult<List<GetBalanceEnquiryResponse>>> AsignedDynamicAccount([FromQuery][Required] string AccountNumber,[FromQuery(Name = "api-version")] string apiversion)
         {
             return await Mediator.Send(new GetBalanceEnquiryQuery { AccountNumber = AccountNumber, apiversion = apiversion });
         }
 
-        [HttpGet("bankenquiry-fsdhpay")]
+        [HttpGet("api/bank/enquiry")]
         public async Task<ActionResult<List<GetBankResponse>>> GetBank(string name, [FromQuery(Name = "api-version")] string apiversion)
         {
             return await Mediator.Send(new GetBanksQuery { apiversion = apiversion, name = name });
                  
         }
 
-        [HttpGet("funds-transfer-fsdhpay")]
+        [HttpGet("api/funds/transfer")]
         public async Task<ActionResult<List<GetFundsTransferResponse>>> GetFundsTransfer(string TransactionId, string PaymentReference, [FromQuery(Name = "api-version")] string apiversion)
         {
             return await Mediator.Send(new GetFundsTransferQuery { TransactionId = TransactionId, PaymentReference = PaymentReference, apiversion = apiversion });
                   
         }
-        [HttpGet("funds-transfer-history-fsdhpay")]
+        [HttpGet("api/funds/transfer/history")]
         public async Task<ActionResult<List<GetFundsTransferHistoryResponse>>> GetFundsTransferHistory(string StartDate, string EndDate, int PageNumber, int PageSize, string apiversion)
         {
             return await Mediator.Send(new GetFundsTransferHistoryQuery { startDate = StartDate, enddate = EndDate, pagenumber = PageNumber, pagesize = PageSize, apiversion = apiversion});
         
         }
 
-        [HttpPost("api-funds-transfer")]
+        [HttpPost("api/funds/transfer")]
         public async Task<ActionResult<List<PostFundsTransferResponses>>> PostFundsTransfers([FromQuery(Name = "api-version")] string apiversion, PostFundstransferCommand ftr)
         {
             return await Mediator.Send(ftr);
         }
 
-        [HttpPost("api-name-enquiry-nip")]
+        [HttpPost("api/name/enquiry/nip")]
         public async Task<ActionResult<List<PostNameEnquiryResponse>>> PostNameEnquiryNIP([FromQuery(Name = "api-version")] string apiversion, PostNameEnquiryCommand ftr)
         {
             return await Mediator.Send(ftr);
         }
 
-        [HttpPost("api-name-enquiry-fsdh")]
+        [HttpPost("api/name/enquiry")]
         public async Task<ActionResult<List<PostNameEnquiryFSDHresponses>>> PostNameEnquiryFSDH([FromQuery][Required] string AccountNumber, [FromQuery(Name = "api-version")] string apiversion)
         {
             return await Mediator.Send(new PostNameEnquiryFSDHQuery { AccountNumber = AccountNumber, ApiVersion = apiversion});

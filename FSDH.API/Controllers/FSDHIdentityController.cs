@@ -18,55 +18,55 @@ namespace FSDH.API.Controllers
 {
     public class FSDHIdentityController : BaseController
     {
-        [HttpPost("info-a-bvn-fsdhidentity")]
+        [HttpPost("api/info/a/bvn/")]
         public async Task<ActionResult<GetSingleBVNResponse>> GetDetailedInfoforABVN(GetDetailedInfoforABVNCommand abc )
         {
             return await Mediator.Send(abc);
         }
 
-        [HttpPost("info-multiplebvn-fsdhidentity")]
+        [HttpPost("api/info/multiplebvn")]
         public async Task<ActionResult<GetDetailedInfoforAListofBVNResponse>> GetDetailedInfoMultipleBVN(GetDetailedInfoMultipleBVNCommand abc)
         {
             return await Mediator.Send(abc);
         }
 
-        [HttpPost("info-bvn-date-fsdhidentity")]
+        [HttpPost("api/info/bvn/date")]
         public async Task<ActionResult<GetSingleBVNbyDAteResponses>> GetSingleBVNbyDate(GetSingleBVNbyDateCommand abc)
         {
             return await Mediator.Send(abc);
         }
 
-        [HttpPost("info-bvn-otp-fsdhidentity")]
+        [HttpPost("api/info/bvn/otp")]
         public async Task<ActionResult<GetSingleBVNbyOTPResponses>> GetSingleBVNbyOTPs(GetSingleBVNbyOTPCommand abc)
         {
             return await Mediator.Send(abc);
         }
 
-        [HttpPost("bvn-iswatchlisted-fsdhidentity")]
+        [HttpPost("api/bvn/iswatchlisted")]
         public async Task<ActionResult<IsBVNWatchListedResponses>> IsBVNWatchListed(IsBvnWatchListedCommand abc)
         {
             return await Mediator.Send(abc);
         }
 
-        [HttpGet("bvn-validateotp-fsdhidentity")]
+        [HttpGet("api/bvn/validateotp")]
         public async Task<ActionResult<ValidateOTPResponses>> ValidateanOTP([FromQuery] string RecordReference, [FromQuery] string OTP)
         {
             return await Mediator.Send(new ValidateOTPQuery {OTP = OTP, RecordReference = RecordReference });
         }
 
-        [HttpPost("verify-multiple-bvn-fsdhidentity")]
+        [HttpPost("api/verify/multiple/bvn")]
         public async Task<ActionResult<VerifyMultipleBVNResponses>> VerifyMultipleBVN(VerifyMultipleBvnCommand abc)
         {
             return await Mediator.Send(abc);
         }
 
-        [HttpPost("verify-single-bvn-fsdhidentity")]
+        [HttpPost("api/verify/single/bvn")]
         public async Task<ActionResult<VerifySingleBVN>> VerifySingleBVN(VerifySingleBvnCommand abc)
         {
             return await Mediator.Send(abc);
         }
 
-        [HttpPost("verify-single-bvn-date-fsdhidentity")]
+        [HttpPost("api/verify/single/bvn/date")]
         public async Task<ActionResult<VerifySingleBVNbyDate>> verifySingleBVNbyDate(VerifySingleBvnbyDateCommand abc)
         {
             return await Mediator.Send(abc);
