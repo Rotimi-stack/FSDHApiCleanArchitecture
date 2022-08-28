@@ -25,6 +25,15 @@ namespace FSDH.Application.Common.Models.FSDH360
 
     }
 
+    public class Validfor
+    {
+        public int years { get; set; }
+        public int months { get; set; }
+        public int days { get; set; }
+        public int hours { get; set; }
+        public int minutes { get; set; }
+    }
+
     public class QueryBalanceforCollectionAccountResponse
     {
         public string accountNumber { get; set; }
@@ -63,23 +72,24 @@ namespace FSDH.Application.Common.Models.FSDH360
         public string accountName { get; set; }
         public string collectionAccountNumber { get; set; }
         public string bvn { get; set; }
-        public string accountType { get; set; }
+        public int accountType { get; set; }
         public string accountCurrency { get; set; }
     }
 
     public class GetAllAsignedDynamicAccount
     {
-        public bool hasExpired { get; set; }
-        public DateTime expires { get; set; }
-        public string uniqueReference { get; set; }
-        public bool isOneTimePaymentAccount { get; set; }
-        public string expectedAmount { get; set; }
         public string accountNumber { get; set; }
         public string accountName { get; set; }
         public string collectionAccountNumber { get; set; }
         public string bvn { get; set; }
         public int accountType { get; set; }
         public string accountCurrency { get; set; }
+        public bool hasExpired { get; set; }
+        public DateTime expires { get; set; }
+        public string uniqueReference { get; set; }
+        public bool isOneTimePaymentAccount { get; set; }
+        public string expectedAmount { get; set; }
+
     }
 
     public class GetAllAsignedDynamicAccountBVN
@@ -145,8 +155,8 @@ namespace FSDH.Application.Common.Models.FSDH360
 
     public class CollectionAccountBalanceDetails
     {
-        public int availableBalance { get; set; }
-        public int ledgerBalance { get; set; }
+        public double availableBalance { get; set; }
+        public double ledgerBalance { get; set; }
     }
 
     public class UnassignDynamicAccount
@@ -167,6 +177,8 @@ namespace FSDH.Application.Common.Models.FSDH360
         public string bvn { get; set; }
         public int accountType { get; set; }
         public string accountCurrency { get; set; }
+        public DateTime validTill { get; set; }
+        public Validfor validFor { get; set; }
     }
 
     public class GetAllstaticAccount
@@ -175,7 +187,7 @@ namespace FSDH.Application.Common.Models.FSDH360
         public string accountName { get; set; }
         public string collectionAccountNumber { get; set; }
         public string bvn { get; set; }
-        public string accountType { get; set; }
+        public int accountType { get; set; }
         public string accountCurrency { get; set; }
     }
 
@@ -185,7 +197,7 @@ namespace FSDH.Application.Common.Models.FSDH360
         public string accountName { get; set; }
         public string collectionAccountNumber { get; set; }
         public string bvn { get; set; }
-        public string accountType { get; set; }
+        public int accountType { get; set; }
         public string accountCurrency { get; set; }
     }
 
@@ -195,7 +207,7 @@ namespace FSDH.Application.Common.Models.FSDH360
         public string accountName { get; set; }
         public string collectionAccountNumber { get; set; }
         public string bvn { get; set; }
-        public string accountType { get; set; }
+        public int accountType { get; set; }
         public string accountCurrency { get; set; }
     }
 
@@ -205,7 +217,7 @@ namespace FSDH.Application.Common.Models.FSDH360
         public string accountName { get; set; }
         public string collectionAccountNumber { get; set; }
         public string bvn { get; set; }
-        public string accountType { get; set; }
+        public int accountType { get; set; }
         public string accountCurrency { get; set; }
     }
 }

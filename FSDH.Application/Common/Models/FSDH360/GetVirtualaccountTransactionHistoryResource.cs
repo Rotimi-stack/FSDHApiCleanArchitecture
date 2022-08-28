@@ -9,7 +9,7 @@ namespace FSDH.Application.Common.Models.FSDH360
         public string accountNumber { get; set; }
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
-        public string skip { get; set; }
-        public string take { get; set; }
+        public int skip { get; set; }
+        public int take { get; set; }
     }
 }

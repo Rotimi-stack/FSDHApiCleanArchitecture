@@ -12,8 +12,11 @@ using FSDH.Application.Query.AllStaticAccountQuery;
 using FSDH.Application.Query.AStaticAccountQuery;
 using FSDH.Application.Query.UnassignDynamicAccountQuery;
 using FSDH.Domain.Enums.FSDH360;
+using FSDH.Shared.LogService;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -29,9 +32,13 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
         private readonly HttpClient _client;
         private readonly IConfiguration _config;
         private readonly FSDH360Configurationsettings _fsdhsettings;
+        private readonly ILogWritter _logger;
 
-        public FSDH360Service(IHttpClientFactory httpClientFactory, IConfiguration config, FSDH360Configurationsettings fsdhsettings)
+        private static Logger log = LogManager.GetCurrentClassLogger();
+
+        public FSDH360Service(IHttpClientFactory httpClientFactory, IConfiguration config, FSDH360Configurationsettings fsdhsettings, ILogWritter logger)
         {
+            _logger = logger;
             _client = httpClientFactory.CreateClient();
             _config = config;
             _fsdhsettings = fsdhsettings;
@@ -41,22 +48,22 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
 
 
         #region VirtualAccounts
-        public async Task<GetAllAsignedDynamicAccount> AsignedDynamicAccount(int take, int skip, string apiversion)
+        public async Task<List<GetAllAsignedDynamicAccount>> AsignedDynamicAccount(int skip, int take, string apiversion)
         {
-            return await SendAsync<GetAllDynamicAssignedQuery, GetAllAsignedDynamicAccount>(
+            return await SendAsync<GetAllDynamicAssignedQuery, List<GetAllAsignedDynamicAccount>>(
                  new GetAllDynamicAssignedQuery(), $"/v1/virtualaccounts/dynamic/assigned?skip={skip}&take={take}&api-version={apiversion}", FSDH360HttpMethodType.Get);
 
         }
 
-        public async Task<GetUnAssignedDynamicAccount> UnAssignedDynamicAccount(int take, int skip, string apiversion)
+        public async Task<List<GetUnAssignedDynamicAccount>> UnAssignedDynamicAccount(int skip, int take, string apiversion)
         {
-            return await SendAsync<GetAllDynamicUnAssignedAccountQuery, GetUnAssignedDynamicAccount>(
+            return await SendAsync<GetAllDynamicUnAssignedAccountQuery, List<GetUnAssignedDynamicAccount>>(
                 new GetAllDynamicUnAssignedAccountQuery(), $"/v1/virtualaccounts/dynamic/unassigned?skip={skip}&take={take}&api-version{apiversion}", FSDH360HttpMethodType.Get);
         }
 
-        public async Task<GetAllAsignedDynamicAcciountByCollectionAccount> AssignedDynamicAccountByCollectionAccount(int take, int skip, string apiversion, string AccountNumber)
+        public async Task<List<GetAllAsignedDynamicAcciountByCollectionAccount>> AssignedDynamicAccountByCollectionAccount(string AccountNumber,int skip, int take, string apiversion)
         {
-            return await SendAsync<GetAllDynamicAssignedAccountByCollectionAccountQuery, GetAllAsignedDynamicAcciountByCollectionAccount>(
+            return await SendAsync<GetAllDynamicAssignedAccountByCollectionAccountQuery, List<GetAllAsignedDynamicAcciountByCollectionAccount>>(
                 new GetAllDynamicAssignedAccountByCollectionAccountQuery(), 
                 
                 $"/v1/virtualaccounts/dynamic/assigned/collectionaccount?AccountNumber={AccountNumber}&skip={skip}&take={take}&api-version={apiversion}", FSDH360HttpMethodType.Get);
@@ -75,22 +82,22 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
 
         }
 
-        public async Task<GetAllAsignedDynamicAccountBVN> GetAllDynamicAssignedAccountByBVN(int take, int skip, string apiversion, string BVN)
+        public async Task<List<GetAllAsignedDynamicAccountBVN>> GetAllDynamicAssignedAccountByBVN(string BVN, int skip, int take,  string apiversion)
         {
-            return await SendAsync<GetAllDynamicAssignedAccountByBVNQuery, GetAllAsignedDynamicAccountBVN>(
+            return await SendAsync<GetAllDynamicAssignedAccountByBVNQuery, List<GetAllAsignedDynamicAccountBVN>>(
                 new GetAllDynamicAssignedAccountByBVNQuery(), $"/v1/virtualaccounts/dynamic/assigned/bvn?BVN={BVN}&skip={skip}&take={take}&api-version{apiversion}", FSDH360HttpMethodType.Get);
         }
 
-        public async Task<GetADynamicAccount> GetADynamicAccount(string apiversion, string AccountNumber)
+        public async Task<List<GetADynamicAccount>> GetADynamicAccount(string apiversion, string AccountNumber)
         {
-            return await SendAsync<GetADynamicAccountQuery, GetADynamicAccount>(
+            return await SendAsync<GetADynamicAccountQuery, List<GetADynamicAccount>>(
                 new GetADynamicAccountQuery(), $"v1/virtualaccounts/dynamic/account?{AccountNumber}&{apiversion}", FSDH360HttpMethodType.Get
                 );
         }
-        public async Task<UnassignDynamicAccount> UnAssignDynamicAccount(string apiversion, string AccountNumber)
+        public async Task<List<UnassignDynamicAccount>> UnAssignDynamicAccount(string apiversion, string AccountNumber)
         {
-            return await SendAsync<UnassignADynamicAccountQuery, UnassignDynamicAccount>(
-                new UnassignADynamicAccountQuery(), $"v1/virtualaccounts/dynamic?{AccountNumber}&{apiversion}", FSDH360HttpMethodType.Delete
+            return await SendAsync<UnassignADynamicAccountQuery, List<UnassignDynamicAccount>>(
+                new UnassignADynamicAccountQuery(), $"/v1/virtualaccounts/dynamic?{AccountNumber}&{apiversion}", FSDH360HttpMethodType.Delete
                 );
         }
 
@@ -98,7 +105,7 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
         {
             var data = new CreateVirtualAccountRequest
             {
-                validTill = var.validTill,
+               
                 accountName = var.accountName,
                 bvn = var.bvn,
                 collectionAccountNumber = var.collectionAccountNumber,
@@ -112,21 +119,23 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                 data, $"/v1/virtualaccounts/dynamic?api-version=1", FSDH360HttpMethodType.Post);
         }
 
-        public async Task<GetDynamicAccountTransactionHistory> GetDynamicAccountTransactionHistory(GetDynamicAccountTransactionHistoryResources atr)
+        public async Task<List<GetDynamicAccountTransactionHistory>> GetDynamicAccountTransactionHistory(GetDynamicAccountTransactionHistoryResources atr)
         {
             var data = new GetDynamicAccountTransactionHistoryRequest
             {
-                take = atr.take,
+                
                 accountNumber = atr.accountNumber,
+                startDate = atr.startDate,
                 endDate = atr.endDate,
                 skip = atr.skip,
-                startDate = atr.startDate
+                take = atr.take
+
             };
-            return await SendAsync<GetDynamicAccountTransactionHistoryRequest, GetDynamicAccountTransactionHistory>(
-                data, $"v1/virtualaccounts/dynamic/history?api-version=1", FSDH360HttpMethodType.Post
+            return await SendAsync<GetDynamicAccountTransactionHistoryRequest, List<GetDynamicAccountTransactionHistory>>(
+                data, $"/v1/virtualaccounts/dynamic/history?api-version=1", FSDH360HttpMethodType.Post
                 );
         }
-        public async Task<UpdateDynamicAccountResponse> UpdateDynamicAccount(UpdateDynamicAccountResources adr)
+        public async Task<List<UpdateDynamicAccountResponse>> UpdateDynamicAccount(UpdateDynamicAccountResources adr)
         {
             var data = new UpdateDynamicAccountRequest
             {
@@ -140,7 +149,7 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                 validTill = adr.validTill
 
             };
-            return await SendAsync<UpdateDynamicAccountRequest, UpdateDynamicAccountResponse>(
+            return await SendAsync<UpdateDynamicAccountRequest, List<UpdateDynamicAccountResponse>>(
                 data, $"/v1/virtualaccounts/dynamic?api-version=1", FSDH360HttpMethodType.Put
                 );
 
@@ -153,29 +162,29 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
         #region StaticAccount
 
 
-        public async Task<GetAllstaticAccount> GetAllstaticAccount(int take, int skip, string apiversion)
+        public async Task<List<GetAllstaticAccount>> GetAllstaticAccount(int take, int skip, string apiversion)
         {
-            return await SendAsync<GetAllStaticAccountQuery, GetAllstaticAccount>(
-                 new GetAllStaticAccountQuery(), $"v1/virtualaccounts/static?{skip}&{take}&{apiversion}", FSDH360HttpMethodType.Get);
+            return await SendAsync<GetAllStaticAccountQuery, List<GetAllstaticAccount>>(
+                 new GetAllStaticAccountQuery(), $"/v1/virtualaccounts/static?{skip}&{take}&{apiversion}", FSDH360HttpMethodType.Get);
         }
 
         public async  Task<GetAstaticAccount> GetAStaticAccount(string apiversion, string AccountNumber)
         {
             return await SendAsync<GetAStaticAccountQuery, GetAstaticAccount>(
-                 new GetAStaticAccountQuery(), $"v1/virtualaccounts/static/account?{AccountNumber}&{apiversion}", FSDH360HttpMethodType.Get);
+                 new GetAStaticAccountQuery(), $"/v1/virtualaccounts/static/account?AccountNumber={AccountNumber}&{apiversion}", FSDH360HttpMethodType.Get);
         }
 
-        public async Task<GetAllCollectionLinkedAccount> GetAllCollectionLinkedAccount(int take, int skip, string apiversion, string AccountNumber)
+        public async Task<List<GetAllCollectionLinkedAccount>> GetAllCollectionLinkedAccount(int take, int skip, string apiversion, string AccountNumber)
         {
-            return await SendAsync<GetAllCollectionLinkedAccountQuery, GetAllCollectionLinkedAccount>(
-                new GetAllCollectionLinkedAccountQuery(), $"v1/virtualaccounts/static/collectionaccount?{AccountNumber}&{skip}&{take}&{apiversion}", FSDH360HttpMethodType.Get
+            return await SendAsync<GetAllCollectionLinkedAccountQuery, List<GetAllCollectionLinkedAccount>>(
+                new GetAllCollectionLinkedAccountQuery(), $"/v1/virtualaccounts/static/collectionaccount?AccountNumber={AccountNumber}&{skip}&{take}&{apiversion}", FSDH360HttpMethodType.Get
                 );
         }
 
-        public async Task<GetAllStaticAccountLinkedtoBVN> GetGetAllStaticAccountLinkedtoBVN(string apiversion, string BVN)
+        public async Task<List<GetAllStaticAccountLinkedtoBVN>> GetGetAllStaticAccountLinkedtoBVN(string BVN, string apiversion)
         {
-            return await SendAsync<GetAllStaticAccountLinkedtoBVNQuery, GetAllStaticAccountLinkedtoBVN>(
-                new GetAllStaticAccountLinkedtoBVNQuery(), $"v1/virtualaccounts/static/bvn?{BVN}&{apiversion}", FSDH360HttpMethodType.Get);
+            return await SendAsync<GetAllStaticAccountLinkedtoBVNQuery, List<GetAllStaticAccountLinkedtoBVN>>(
+                new GetAllStaticAccountLinkedtoBVNQuery(), $"/v1/virtualaccounts/static/bvn?BVN={BVN}&api-version={apiversion}", FSDH360HttpMethodType.Get);
         }
 
         public async Task<CreateStaticVirtualAccountResponses> CreateStaticVirtualAccount(CreateStaticVirtualAccountResource var)
@@ -192,7 +201,7 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                 );
         }
 
-        public async Task<UpdateStaticVirtualAccountResponse> UpdateStaticVirtualAccount(UpdateStaticVirtualAccountResources var)
+        public async Task<List<UpdateStaticVirtualAccountResponse>> UpdateStaticVirtualAccount(UpdateStaticVirtualAccountResources var)
         {
             var data = new UpdateStaticVirtualAccountRequest
             {
@@ -201,23 +210,23 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                 bvn = var.bvn,
                 accountName = var.accountName
             };
-            return await SendAsync<UpdateStaticVirtualAccountRequest, UpdateStaticVirtualAccountResponse>(
+            return await SendAsync<UpdateStaticVirtualAccountRequest, List<UpdateStaticVirtualAccountResponse>>(
                 data, $"/v1/virtualaccounts/static?api-version=1", FSDH360HttpMethodType.Put
                 );
         }
 
-        public async Task<QueryBalanceforCollectionAccountResponse> QueryBalanceforCollectionAccount(QueryBalanceforCollectionAccountResource car)
+        public async Task<List<QueryBalanceforCollectionAccountResponse>> QueryBalanceforCollectionAccount(QueryBalanceforCollectionAccountResource car)
         {
             var data = new QueryBalanceforCollectionAccountRequest
             {
                 accountNumber = car.accountNumber
             };
-            return await SendAsync<QueryBalanceforCollectionAccountRequest, QueryBalanceforCollectionAccountResponse>(
+            return await SendAsync<QueryBalanceforCollectionAccountRequest, List<QueryBalanceforCollectionAccountResponse>>(
                 data, $"/v1/virtualaccounts/static/collectionaccount/balance?api-version=1", FSDH360HttpMethodType.Post);
         }
 
 
-        public async Task<GetVirtualaccountTransactionHistoryResponse> GetVirtualaccountTransactionHistory(GetVirtualaccountTransactionHistoryResource thr)
+        public async Task<List<GetVirtualaccountTransactionHistoryResponse>> GetVirtualaccountTransactionHistory(GetVirtualaccountTransactionHistoryResource thr)
         {
             var data = new GetVirtualaccountTransactionHistoryRequest
             {
@@ -227,7 +236,7 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                 skip = thr.skip,
                 startDate = thr.startDate
             };
-            return await SendAsync<GetVirtualaccountTransactionHistoryRequest, GetVirtualaccountTransactionHistoryResponse>(
+            return await SendAsync<GetVirtualaccountTransactionHistoryRequest, List<GetVirtualaccountTransactionHistoryResponse>>(
                 data, $"/v1/virtualaccounts/static/history?api-version=1", FSDH360HttpMethodType.Post
                 );
         }
@@ -258,22 +267,31 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                 case FSDH360HttpMethodType.Post:
                     var resp = await _client.PostAsync($"{baseaddress}{relativePath}", message);
                     content = await resp.Content.ReadAsStringAsync();
+                    log.Info("Message: " + content + Environment.NewLine + Environment.NewLine + "Endpoint: " + baseaddress + relativePath + Environment.NewLine + payload + Environment.NewLine + Environment.NewLine + "ApiKey: " + testkey + Environment.NewLine + _client.Timeout + Environment.NewLine + DateTime.Now);
                     return JsonSerializer.Deserialize<U>(content);
 
                 case FSDH360HttpMethodType.Delete:
                     var resssp = await _client.GetAsync($"{baseaddress}{relativePath}");
                     content = await resssp.Content.ReadAsStringAsync();
+                    log.Info("Message: " + content + Environment.NewLine + Environment.NewLine + "Endpoint: " + baseaddress + relativePath + Environment.NewLine + payload + Environment.NewLine + Environment.NewLine + "ApiKey: " + testkey + Environment.NewLine + _client.Timeout + Environment.NewLine + DateTime.Now);
+
+                    return JsonConvert.DeserializeObject<U>(content);
+
+                case FSDH360HttpMethodType.Put:
+                    var reesp = await _client.GetAsync($"{baseaddress}{relativePath}");
+                    content = await reesp.Content.ReadAsStringAsync();
+                    log.Info("Message: " + content + Environment.NewLine + Environment.NewLine + "Endpoint: " + baseaddress + relativePath + Environment.NewLine + payload + Environment.NewLine + Environment.NewLine + "ApiKey: " + testkey + Environment.NewLine + _client.Timeout + Environment.NewLine + DateTime.Now);
+
                     return JsonConvert.DeserializeObject<U>(content);
 
                 default:
 
                     var ressp = await _client.GetAsync($"{baseaddress}{relativePath}");
                     content = await ressp.Content.ReadAsStringAsync();
+                    log.Info("Message: " + content + Environment.NewLine + Environment.NewLine + "Endpoint: " + baseaddress + relativePath + Environment.NewLine + payload + Environment.NewLine + Environment.NewLine + "ApiKey: " + testkey + Environment.NewLine + _client.Timeout + Environment.NewLine + DateTime.Now);
 
-                    return JsonConvert.DeserializeObject<U>(content);
 
-
-                   
+                    return JsonSerializer.Deserialize<U>(content);     
 
 
             }
@@ -287,10 +305,3 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
 
 
 
-
-
-
-
-
-
-//$"/v1/virtualaccounts/dynamic/assigned/collectionaccount?{AccountNumber}&{skip}&{take}&{apiversion}

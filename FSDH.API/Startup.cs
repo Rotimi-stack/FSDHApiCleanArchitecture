@@ -3,7 +3,9 @@ using FSDH.Application.Common.Interfaces;
 using FSDH.Application.ConfigurationOptionsSettings;
 using FSDH.Infrastructure;
 using FSDH.Infrastructure.ServiceIntegration.FSDH360;
+using FSDH.Infrastructure.ServiceIntegration.FSDHIdentity;
 using FSDH.Infrastructure.ServiceIntegration.FSDHPay;
+using FSDH.Shared.LogService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,6 +39,8 @@ namespace FSDH.API
             services.AddScoped<FSDH360Configurationsettings>();
             services.AddScoped<IFSDH360, FSDH360Service>();
             services.AddScoped<IFSDHPay, FSDHPayService>();
+            services.AddScoped<IFSDHIdentity, FSDHIdentityServices>();
+            services.AddScoped<ILogWritter, LogWriter>();
             services.AddApplication();
             services.AddInfrastructure();
             services.AddControllers();
