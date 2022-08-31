@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -268,19 +269,38 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                     var resp = await _client.PostAsync($"{baseaddress}{relativePath}", message);
                     content = await resp.Content.ReadAsStringAsync();
                     log.Info("Message: " + content + Environment.NewLine + Environment.NewLine + "Endpoint: " + baseaddress + relativePath + Environment.NewLine + payload + Environment.NewLine + Environment.NewLine + "ApiKey: " + testkey + Environment.NewLine + _client.Timeout + Environment.NewLine + DateTime.Now);
+
+                    if (resp.StatusCode == HttpStatusCode.BadGateway || (resp.StatusCode == HttpStatusCode.Unauthorized) || resp.StatusCode == HttpStatusCode.BadRequest || resp.StatusCode == HttpStatusCode.ServiceUnavailable || resp.StatusCode == HttpStatusCode.InternalServerError || resp.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return JsonSerializer.Deserialize<U>(content);
+                        
+                    }
                     return JsonSerializer.Deserialize<U>(content);
+
 
                 case FSDH360HttpMethodType.Delete:
                     var resssp = await _client.GetAsync($"{baseaddress}{relativePath}");
                     content = await resssp.Content.ReadAsStringAsync();
                     log.Info("Message: " + content + Environment.NewLine + Environment.NewLine + "Endpoint: " + baseaddress + relativePath + Environment.NewLine + payload + Environment.NewLine + Environment.NewLine + "ApiKey: " + testkey + Environment.NewLine + _client.Timeout + Environment.NewLine + DateTime.Now);
 
-                    return JsonConvert.DeserializeObject<U>(content);
+                    if (resssp.StatusCode == HttpStatusCode.BadGateway || (resssp.StatusCode == HttpStatusCode.Unauthorized) || resssp.StatusCode == HttpStatusCode.BadRequest || resssp.StatusCode == HttpStatusCode.ServiceUnavailable || resssp.StatusCode == HttpStatusCode.InternalServerError || resssp.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return JsonSerializer.Deserialize<U>(content);
+
+                    }
+                    return JsonSerializer.Deserialize<U>(content);
+
 
                 case FSDH360HttpMethodType.Put:
                     var reesp = await _client.GetAsync($"{baseaddress}{relativePath}");
                     content = await reesp.Content.ReadAsStringAsync();
                     log.Info("Message: " + content + Environment.NewLine + Environment.NewLine + "Endpoint: " + baseaddress + relativePath + Environment.NewLine + payload + Environment.NewLine + Environment.NewLine + "ApiKey: " + testkey + Environment.NewLine + _client.Timeout + Environment.NewLine + DateTime.Now);
+
+                    if (reesp.StatusCode == HttpStatusCode.BadGateway || (reesp.StatusCode == HttpStatusCode.Unauthorized) || reesp.StatusCode == HttpStatusCode.BadRequest || reesp.StatusCode == HttpStatusCode.ServiceUnavailable || reesp.StatusCode == HttpStatusCode.InternalServerError || reesp.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return JsonSerializer.Deserialize<U>(content);
+
+                    }
 
                     return JsonConvert.DeserializeObject<U>(content);
 
@@ -290,6 +310,11 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                     content = await ressp.Content.ReadAsStringAsync();
                     log.Info("Message: " + content + Environment.NewLine + Environment.NewLine + "Endpoint: " + baseaddress + relativePath + Environment.NewLine + payload + Environment.NewLine + Environment.NewLine + "ApiKey: " + testkey + Environment.NewLine + _client.Timeout + Environment.NewLine + DateTime.Now);
 
+
+                    if (ressp.StatusCode == HttpStatusCode.BadGateway || (ressp.StatusCode == HttpStatusCode.Unauthorized) || ressp.StatusCode == HttpStatusCode.BadRequest || ressp.StatusCode == HttpStatusCode.ServiceUnavailable || ressp.StatusCode == HttpStatusCode.InternalServerError || ressp.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return JsonSerializer.Deserialize<U>(content);
+                    }
 
                     return JsonSerializer.Deserialize<U>(content);     
 
