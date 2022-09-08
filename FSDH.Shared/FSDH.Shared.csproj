@@ -5,11 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="C:\Users\arowo\.nuget\packages\nlog.config\4.7.15\contentFiles\any\any\NLog.config" />
     <None Remove="C:\Users\HP\.nuget\packages\nlog.config\4.7.15\contentFiles\any\any\NLog.config" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="C:\Users\HP\.nuget\packages\nlog.config\4.7.15\contentFiles\any\any\NLog.config" />
+    <Content Include="..\..\..\..\..\.nuget\packages\nlog.config\4.7.15\contentFiles\any\any\NLog.config" Link="NLog.config">
+      <Private>True</Private>
+      <NuGetPackageVersion>4.7.15</NuGetPackageVersion>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <NuGetItemType>None</NuGetItemType>
+      <TargetPath>NLog.config</TargetPath>
+      <NuGetPackageId>NLog.Config</NuGetPackageId>
+      <Pack>false</Pack>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

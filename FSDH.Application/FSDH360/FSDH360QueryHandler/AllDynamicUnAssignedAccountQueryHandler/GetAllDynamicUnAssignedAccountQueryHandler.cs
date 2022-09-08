@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FSDH.Application.QueryHandler.AllDynamicUnAssignedAccountQueryHandler
 {
-    public class GetAllDynamicUnAssignedAccountQueryHandler : IRequestHandler<GetAllDynamicUnAssignedAccountQuery, List<GetUnAssignedDynamicAccount>>
+    public class GetAllDynamicUnAssignedAccountQueryHandler : IRequestHandler<GetAllDynamicUnAssignedAccountQuery, GetUnAssignedDynamicAccount>
     {
         private readonly IFSDH360 _fsdh360;
 
@@ -19,7 +19,7 @@ namespace FSDH.Application.QueryHandler.AllDynamicUnAssignedAccountQueryHandler
             _fsdh360 = fsdh360;
         }
 
-        public async Task<List<GetUnAssignedDynamicAccount>> Handle(GetAllDynamicUnAssignedAccountQuery request, CancellationToken cancellationToken)
+        public async Task<GetUnAssignedDynamicAccount> Handle(GetAllDynamicUnAssignedAccountQuery request, CancellationToken cancellationToken)
         {
             var data = new AllDynamicUnAssignedAccountResource
             {

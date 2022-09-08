@@ -6,7 +6,7 @@ using System.Text;
 
 namespace FSDH.Application.Query.UnassignDynamicAccountQuery
 {
-   public class UnassignADynamicAccountQuery : IRequest<List<UnassignDynamicAccount>>
+   public class UnassignADynamicAccountQuery : IRequest<UnassignDynamicAccount>
     {
         public string apiversion { get; set; }
         public string AccountNumber { get; set; }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace FSDH.Application.Query.ADynamicAccountQuery
 {
-   public class GetADynamicAccountQuery : IRequest<List<GetADynamicAccount>>
+   public class GetADynamicAccountQuery : IRequest<GetADynamicAccount>
     {
         public string apiversion { get; set; }
         public string AccountNumber { get; set; }

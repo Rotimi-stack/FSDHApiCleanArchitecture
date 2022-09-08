@@ -36,7 +36,8 @@ namespace FSDH.Application.Common.Models.FSDH360
 
     public class QueryBalanceforCollectionAccountResponse
     {
-        public string accountNumber { get; set; }
+        public double availableBalance { get; set; }
+        public double ledgerBalance { get; set; }
     }
     public class UpdateDynamicAccountResponse
     {
@@ -134,7 +135,7 @@ namespace FSDH.Application.Common.Models.FSDH360
 
     public class GetUnAssignedDynamicAccount
     {
-       
+        public List<string> MyArray { get; set; }
     }
 
 
@@ -177,8 +178,7 @@ namespace FSDH.Application.Common.Models.FSDH360
         public string bvn { get; set; }
         public int accountType { get; set; }
         public string accountCurrency { get; set; }
-        public DateTime validTill { get; set; }
-        public Validfor validFor { get; set; }
+        
     }
 
     public class GetAllstaticAccount

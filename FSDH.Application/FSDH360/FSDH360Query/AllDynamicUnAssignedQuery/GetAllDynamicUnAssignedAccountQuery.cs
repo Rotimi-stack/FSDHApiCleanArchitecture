@@ -6,7 +6,7 @@ using System.Text;
 
 namespace FSDH.Application.Query.AllDynamicUnAssignedQuery
 {
-   public class GetAllDynamicUnAssignedAccountQuery : IRequest<List<GetUnAssignedDynamicAccount>>
+   public class GetAllDynamicUnAssignedAccountQuery : IRequest<GetUnAssignedDynamicAccount>
     {
         public int skip { get; set; }
         public int take { get; set; }

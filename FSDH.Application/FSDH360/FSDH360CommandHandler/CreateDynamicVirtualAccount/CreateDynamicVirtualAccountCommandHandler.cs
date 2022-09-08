@@ -1,6 +1,6 @@
-﻿using FSDH.Application.Command.CreateVirtualAccount;
-using FSDH.Application.Common.Interfaces;
+﻿using FSDH.Application.Common.Interfaces;
 using FSDH.Application.Common.Models.FSDH360;
+using FSDH.Application.FSDH360.FSDH360Command.CreateDynamicVirtualAccount;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace FSDH.Application.CommandHandler.CreateVirtualAccount
 {
-    public class CreateVirtualAccountCommandHandler : IRequestHandler<CreateVirtualAccountCommand, CreateDynamicVirtualAccountResponses>
+    public class CreateDynamicVirtualAccountCommandHandler : IRequestHandler<CreateDynamicVirtualAccountCommand, CreateDynamicVirtualAccountResponses>
     {
         private readonly IFSDH360 _fsdh360;
-        public CreateVirtualAccountCommandHandler(IFSDH360 fsdh360)
+        public CreateDynamicVirtualAccountCommandHandler(IFSDH360 fsdh360)
         {
             _fsdh360 = fsdh360;
         }
@@ -21,7 +21,7 @@ namespace FSDH.Application.CommandHandler.CreateVirtualAccount
 
 
 
-        public async Task<CreateDynamicVirtualAccountResponses> Handle(CreateVirtualAccountCommand request, CancellationToken cancellationToken)
+        public async Task<CreateDynamicVirtualAccountResponses> Handle(CreateDynamicVirtualAccountCommand request, CancellationToken cancellationToken)
         {
             var data = new CreateVirtualAccountResources
             {

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace FSDH.Application.Command.QueryBalanceforCollectionAccount
 {
-   public class QueryBalanceforCollectionAccountCommand : IRequest<List<QueryBalanceforCollectionAccountResponse>>
+   public class QueryBalanceforCollectionAccountCommand : IRequest<QueryBalanceforCollectionAccountResponse>
     {
         public string accountNumber { get; set; }
     }

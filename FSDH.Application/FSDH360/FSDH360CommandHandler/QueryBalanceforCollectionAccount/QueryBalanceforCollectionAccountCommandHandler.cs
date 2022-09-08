@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace FSDH.Application.CommandHandler.QueryBalanceforCollectionAccount
 {
-    public class QueryBalanceforCollectionAccountCommandHandler : IRequestHandler<QueryBalanceforCollectionAccountCommand, List<QueryBalanceforCollectionAccountResponse>>
+    public class QueryBalanceforCollectionAccountCommandHandler : IRequestHandler<QueryBalanceforCollectionAccountCommand, QueryBalanceforCollectionAccountResponse>
     {
         private readonly IFSDH360 _fsdh360;
         public QueryBalanceforCollectionAccountCommandHandler(IFSDH360 fsdh360)
         {
             _fsdh360 = fsdh360;
         }
-        public async Task<List<QueryBalanceforCollectionAccountResponse>> Handle(QueryBalanceforCollectionAccountCommand request, CancellationToken cancellationToken)
+        public async Task<QueryBalanceforCollectionAccountResponse> Handle(QueryBalanceforCollectionAccountCommand request, CancellationToken cancellationToken)
         {
             var data = new QueryBalanceforCollectionAccountResource
             {

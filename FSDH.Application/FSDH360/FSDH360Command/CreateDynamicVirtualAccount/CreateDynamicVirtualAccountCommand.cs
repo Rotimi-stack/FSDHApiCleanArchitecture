@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace FSDH.Application.Command.CreateVirtualAccount
+namespace FSDH.Application.FSDH360.FSDH360Command.CreateDynamicVirtualAccount
 {
-   public class CreateVirtualAccountCommand : IRequest<CreateDynamicVirtualAccountResponses>
+    public class CreateDynamicVirtualAccountCommand : IRequest<CreateDynamicVirtualAccountResponses>
     {
         public string accountName { get; set; }
         public string bvn { get; set; }

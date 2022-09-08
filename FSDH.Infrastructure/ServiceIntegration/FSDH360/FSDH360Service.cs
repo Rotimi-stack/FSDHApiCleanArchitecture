@@ -56,9 +56,9 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
 
         }
 
-        public async Task<List<GetUnAssignedDynamicAccount>> UnAssignedDynamicAccount(int skip, int take, string apiversion)
+        public async Task<GetUnAssignedDynamicAccount> UnAssignedDynamicAccount(int skip, int take, string apiversion)
         {
-            return await SendAsync<GetAllDynamicUnAssignedAccountQuery, List<GetUnAssignedDynamicAccount>>(
+            return await SendAsync<GetAllDynamicUnAssignedAccountQuery, GetUnAssignedDynamicAccount>(
                 new GetAllDynamicUnAssignedAccountQuery(), $"/v1/virtualaccounts/dynamic/unassigned?skip={skip}&take={take}&api-version{apiversion}", FSDH360HttpMethodType.Get);
         }
 
@@ -71,7 +71,7 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
 
         }
 
-        public async Task<CollectionAccountBalanceDetails> CollectionAccountbalanceDetails(CollectionAccountBalanceResources res)
+        public async Task<CollectionAccountBalanceDetails> CollectionDynamicAccountbalanceDetails(CollectionAccountBalanceResources res)
         {
             var data = new CollectionAccountBalanceRequest
             {
@@ -89,15 +89,15 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                 new GetAllDynamicAssignedAccountByBVNQuery(), $"/v1/virtualaccounts/dynamic/assigned/bvn?BVN={BVN}&skip={skip}&take={take}&api-version{apiversion}", FSDH360HttpMethodType.Get);
         }
 
-        public async Task<List<GetADynamicAccount>> GetADynamicAccount(string apiversion, string AccountNumber)
+        public async Task<GetADynamicAccount> GetADynamicAccount(string apiversion, string AccountNumber)
         {
-            return await SendAsync<GetADynamicAccountQuery, List<GetADynamicAccount>>(
+            return await SendAsync<GetADynamicAccountQuery, GetADynamicAccount>(
                 new GetADynamicAccountQuery(), $"v1/virtualaccounts/dynamic/account?{AccountNumber}&{apiversion}", FSDH360HttpMethodType.Get
                 );
         }
-        public async Task<List<UnassignDynamicAccount>> UnAssignDynamicAccount(string apiversion, string AccountNumber)
+        public async Task<UnassignDynamicAccount> UnAssignDynamicAccount(string apiversion, string AccountNumber)
         {
-            return await SendAsync<UnassignADynamicAccountQuery, List<UnassignDynamicAccount>>(
+            return await SendAsync<UnassignADynamicAccountQuery, UnassignDynamicAccount>(
                 new UnassignADynamicAccountQuery(), $"/v1/virtualaccounts/dynamic?{AccountNumber}&{apiversion}", FSDH360HttpMethodType.Delete
                 );
         }
@@ -216,13 +216,13 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
                 );
         }
 
-        public async Task<List<QueryBalanceforCollectionAccountResponse>> QueryBalanceforCollectionAccount(QueryBalanceforCollectionAccountResource car)
+        public async Task<QueryBalanceforCollectionAccountResponse> QueryBalanceforCollectionAccount(QueryBalanceforCollectionAccountResource car)
         {
             var data = new QueryBalanceforCollectionAccountRequest
             {
                 accountNumber = car.accountNumber
             };
-            return await SendAsync<QueryBalanceforCollectionAccountRequest, List<QueryBalanceforCollectionAccountResponse>>(
+            return await SendAsync<QueryBalanceforCollectionAccountRequest, QueryBalanceforCollectionAccountResponse>(
                 data, $"/v1/virtualaccounts/static/collectionaccount/balance?api-version=1", FSDH360HttpMethodType.Post);
         }
 
@@ -313,7 +313,13 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
 
                     if (ressp.StatusCode == HttpStatusCode.BadGateway || (ressp.StatusCode == HttpStatusCode.Unauthorized) || ressp.StatusCode == HttpStatusCode.BadRequest || ressp.StatusCode == HttpStatusCode.ServiceUnavailable || ressp.StatusCode == HttpStatusCode.InternalServerError || ressp.StatusCode == HttpStatusCode.NotFound)
                     {
+
+
                         return JsonSerializer.Deserialize<U>(content);
+
+
+
+
                     }
 
                     return JsonSerializer.Deserialize<U>(content);     
@@ -323,7 +329,10 @@ namespace FSDH.Infrastructure.ServiceIntegration.FSDH360
 
         }
 
-       
+
+
+
+   
     }
 }
 

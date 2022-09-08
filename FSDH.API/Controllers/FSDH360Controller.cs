@@ -1,5 +1,4 @@
 ﻿using FSDH.Application.Command.CollectionAccountBalance;
-using FSDH.Application.Command.CreateVirtualAccount;
 using FSDH.Application.Command.DynamicAccountTransactionHistory;
 using FSDH.Application.Command.GetVirtualaccountTransactionHistory;
 using FSDH.Application.Command.QueryBalanceforCollectionAccount;
@@ -7,6 +6,7 @@ using FSDH.Application.Command.StaticVirtualAccount;
 using FSDH.Application.Command.UpdateDynamicAccount;
 using FSDH.Application.Command.UpdateStaticVirtualAccount;
 using FSDH.Application.Common.Models.FSDH360;
+using FSDH.Application.FSDH360.FSDH360Command.CreateDynamicVirtualAccount;
 using FSDH.Application.Query.ADynamicAccountQuery;
 using FSDH.Application.Query.AllCollectionLinkedAccountQuery;
 using FSDH.Application.Query.AllDynamicAssignedAccountByBVN;
@@ -29,33 +29,33 @@ namespace FSDH.API.Controllers
     public class FSDH360Controller : BaseController
     {
         #region VirtualAccount
-        [HttpGet("api/allassignedaccount")]
+        [HttpGet("api/virtualaccounts/dynamic/assigned")]
         public async Task<ActionResult<List<GetAllAsignedDynamicAccount>>> AsignedDynamicAccount([FromQuery] int skip, [FromQuery] int take, [FromQuery(Name = "api-version")] string apiversion)
         {
             return await Mediator.Send(new GetAllDynamicAssignedQuery { skip = skip, take = take,  apiversion = apiversion });
         }
 
 
-        [HttpGet("api/allunassignedaccount")]
-        public async Task<ActionResult<List<GetUnAssignedDynamicAccount>>> UnAssignedDynamicAccount([FromQuery] int skip, [FromQuery] int take, [FromQuery(Name = "api-version")] string apiversion)
+        [HttpGet("api/virtualaccounts/dynamic/unassigned")]
+        public async Task<ActionResult<GetUnAssignedDynamicAccount>> UnAssignedDynamicAccount([FromQuery] int skip, [FromQuery] int take, [FromQuery(Name = "api-version")] string apiversion)
         {
             return await Mediator.Send(new GetAllDynamicUnAssignedAccountQuery { skip = skip, take = take, apiversion = apiversion });
         }
 
-        [HttpGet("api/alldynamic/assigned/account/bycollectionaccount")]
+        [HttpGet("api/v1/virtualaccounts/dynamic/assigned/collectionaccount")]
         public async Task<ActionResult<List<GetAllAsignedDynamicAcciountByCollectionAccount>>> AssignedDynamicAccountByCollectionAccount([FromQuery][Required] string AccountNumber, [FromQuery] int skip, [FromQuery] int take, [FromQuery(Name = "api-version")] string apiversion)
         {
             return await Mediator.Send(new GetAllDynamicAssignedAccountByCollectionAccountQuery {AccountNumber = AccountNumber, skip = skip, take = take, apiversion = apiversion });
         }
 
-        [HttpPost("api/collection/account/balancequery")]
-        public async Task<ActionResult<CollectionAccountBalanceDetails>> CollectionAccountbalanceDetails([FromQuery(Name = "api-version")] string apiversion, CollectionAccountBalanceCommand actCom)
+        [HttpPost("api/v1/virtualaccounts/dynamic/collectionaccount/balance")]
+        public async Task<ActionResult<CollectionAccountBalanceDetails>> CollectionDynamicAccountbalanceDetails([FromQuery(Name = "api-version")] string apiversion, CollectionDynamicAccountbalanceDetailsCommand actCom)
         {
             return await Mediator.Send(actCom);
         }
 
         [HttpPost("api/create/dynamic/virtualaccount")]
-        public async Task<ActionResult<CreateDynamicVirtualAccountResponses>> CreateDynamicVirtualAccount([FromQuery(Name = "api-version")] string apiversion, CreateVirtualAccountCommand actCom)
+        public async Task<ActionResult<CreateDynamicVirtualAccountResponses>> CreateDynamicVirtualAccount([FromQuery(Name = "api-version")] string apiversion, CreateDynamicVirtualAccountCommand actCom)
         {
             return await Mediator.Send(actCom);
         }
@@ -73,21 +73,21 @@ namespace FSDH.API.Controllers
         }
 
 
-        [HttpGet("api/dynamic/assignedaccount/bybvn")]
+        [HttpGet("api/virtualaccounts/dynamic/assigned/bvn")]
         public async Task<ActionResult<List<GetAllAsignedDynamicAccountBVN>>> GetAllDynamicAssignedAccountByBVN([FromQuery][Required] string BVN,[FromQuery] int skip, [FromQuery] int take, [FromQuery(Name = "api-version")] string apiversion)
         {
             return await Mediator.Send(new GetAllDynamicAssignedAccountByBVNQuery { BVN = BVN, skip = skip, take = take,  apiversion = apiversion,  });
         }
 
-        [HttpGet("api/adynamic/account")]
-        public async Task<ActionResult<List<GetADynamicAccount>>> GetADynamicAccount([FromQuery(Name = "api-version")] string apiversion, string AccountNumber)
+        [HttpGet("api/virtualaccounts/dynamic/account")]
+        public async Task<ActionResult<GetADynamicAccount>> GetADynamicAccount([FromQuery(Name = "api-version")] string apiversion, string AccountNumber)
         {
             return await Mediator.Send(new GetADynamicAccountQuery { apiversion = apiversion, AccountNumber = AccountNumber });
 
         }
 
-        [HttpDelete("api/unassigned/dynamic/account")]
-        public async Task<ActionResult<List<UnassignDynamicAccount>>> UnAssignDynamicAccount([FromQuery(Name = "api-version")] string apiversion, string AccountNumber)
+        [HttpDelete("api/virtualaccounts/dynamic")]
+        public async Task<ActionResult<UnassignDynamicAccount>> UnAssignDynamicAccount([FromQuery(Name = "api-version")] string apiversion, string AccountNumber)
         {
             return await Mediator.Send(new UnassignADynamicAccountQuery { apiversion = apiversion, AccountNumber = AccountNumber });
 
@@ -118,7 +118,7 @@ namespace FSDH.API.Controllers
         }
 
         [HttpGet("api/allstatic/account/linkedtobvn")]
-        public async Task<List<GetAllStaticAccountLinkedtoBVN>> GetGetAllStaticAccountLinkedtoBVN([Required] string BVN, [FromQuery(Name = "api-version")] string apiversion)
+        public async Task<ActionResult<List<GetAllStaticAccountLinkedtoBVN>>> GetGetAllStaticAccountLinkedtoBVN([Required] string BVN, [FromQuery(Name = "api-version")] string apiversion)
         {
             return await Mediator.Send(new GetAllStaticAccountLinkedtoBVNQuery{ apiversion = apiversion, BVN = BVN });
                 
@@ -138,13 +138,13 @@ namespace FSDH.API.Controllers
 
         }
         [HttpPost("api/query/balance/collectionaccount")]
-        public async Task<List<QueryBalanceforCollectionAccountResponse>> QueryBalanceforCollectionAccount([FromQuery(Name = "api-version")] string apiversion, QueryBalanceforCollectionAccountCommand car)
+        public async Task<ActionResult<QueryBalanceforCollectionAccountResponse>> QueryBalanceforCollectionAccount([FromQuery(Name = "api-version")] string apiversion, QueryBalanceforCollectionAccountCommand car)
         {
             return await Mediator.Send(car);
         }
 
         [HttpPost("api/get/virtual/transaction/history")]
-        public async Task<List<GetVirtualaccountTransactionHistoryResponse>> GetVirtualaccountTransactionHistory([FromQuery(Name = "api-version")] string apiversion, GetVirtualaccountTransactionHistoryCommand thr)
+        public async Task<ActionResult<List<GetVirtualaccountTransactionHistoryResponse>>> GetVirtualaccountTransactionHistory([FromQuery(Name = "api-version")] string apiversion, GetVirtualaccountTransactionHistoryCommand thr)
         {
             return await Mediator.Send(thr);
         }
